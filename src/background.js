@@ -32,7 +32,7 @@ async function createWindow() {
     }
   })
 
-  globalShortcut.register('CommandOrControl+M', () => {
+  globalShortcut.register('Alt+Shift+V', () => {
       win.isVisible() ? win.hide() : win.show();
   })
 

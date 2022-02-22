@@ -1,24 +1,134 @@
 <template>
   <v-app>
-    <v-main>
-      <ClipList />
+    <div
+    >
+      <focus-trap v-model="drawerTrap">
+        <div 
+          id="trapDiv" tabindex="-1"
+          @keydown.stop.prevent="keyPress($event, $refs.nav)"
+          @keypress.stop.prevent="keyPress($event, $refs.nav)"
+          >
+          <v-navigation-drawer
+            app
+            permanent
+            :mini-variant.sync="mini"
+          >
+            <b>CMD<br />
+              Snips</b>
+            <v-divider></v-divider>
+            <v-list nav dense>
+              <v-list-item link
+                ref="nav"
+                v-for="(link, i) in menuLinks"
+                :key="i"
+                :class="currentMenuLink == link.name?'blue-grey':''"
+                @click="navigate(link.name)"
+              >
+                <v-list-item-icon>
+                  <v-icon v-text="link.icon"></v-icon>
+                </v-list-item-icon>
+                <v-list-item-title v-text=link.name></v-list-item-title>
+              </v-list-item>
+            </v-list>
+            <v-divider></v-divider>
+          </v-navigation-drawer>
+        </div>
+      </focus-trap>
+    </div>
+
+    <!--
+    <v-app-bar class="ml-13 pa-0">
+      <v-app-bar-nav-icon @click="drawer = true"></v-app-bar-nav-icon>
+    </v-app-bar>
+    -->
+
+    <!-- Sizes your content based upon application components -->
+    <v-main class="ml-13 pa-0">
+      <v-card>
+        <ClipList />
+      </v-card>
+      <v-card>
+        <Shortcuts />
+      </v-card>
+      <v-card>
+        <Settings />
+      </v-card>
+
+      <!-- Provides the application the proper gutter -->
+
+        <!-- If using vue-router -->
+        <!--<router-view></router-view> -->
     </v-main>
+
+    <v-footer app>
+      <!-- -->
+    </v-footer>
   </v-app>
 </template>
 
 <script>
-// import HelloWorld from './components/HelloWorld';
+import Utils from '@/helpers/Utils'
 import ClipList from './components/ClipList'
+import Shortcuts from './components/Shortcuts'
+import Settings from './components/Settings'
 
 export default {
   name: 'App',
-
   components: {
-    ClipList
+    ClipList,
+    Shortcuts,
+    Settings
   },
+  data () {
+    return {
+      menuLinks: [
+        {"icon":"mdi-plus-thick","name":"New CMD Snippet"},
+        {"icon":"mdi-view-list","name":"All CMD Snips"}, 
+        {"icon":"mdi-star","name":"Favorites"}, 
+        {"icon":"mdi-tag-multiple","name":"Untagged"},
+        {"icon":"mdi-trash-can","name":"Deleted"},
+        {"icon":"mdi-cog","name":"Settings"}
+        ],
+      currentMenuLink: null,
+      drawerTrap: false,
+      mini: true,
+      focusedIndex: null
+    }
+  },
+  mounted () {
+    this.$root.$on('sendFocusToMenu', () => {
+      this.drawer = true
+      this.mini = false
+      this.$nextTick(function(){
+        console.log('menuTrap active')
+        this.drawerTrap = true
+      })
+    }) 
+  },
+  methods: {
+    keyPress (event) {
+      console.log('kepress')
+      console.log(this.$refs.nav)
+      if (event.key == "j" || event.key == "k") {
+        this.focusedIndex = Utils.getIndex(this.focusedIndex, event.key, this.menuLinks.length)
+        console.log(this.focusedIndex)
+        this.currentMenuLink = this.menuLinks[this.focusedIndex].name
+      }
 
-  data: () => ({
-    //
-  }),
-};
+      if ((event.altKey === true && event.key === 'm') ||
+          (event.key === 'esc')) {
+        this.esc()
+      }
+    },
+    navigate (link) {
+      console.log(link)
+      this.currentMenuLink = link
+    },
+    esc (){
+      this.mini = true
+      this.drawerTrap = false
+      this.$root.$emit('sendFocusToDataTable')
+    }
+  }
+}
 </script>
