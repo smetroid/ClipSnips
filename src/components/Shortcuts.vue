@@ -1,13 +1,47 @@
 <template>
-  <div>
-    <div>
-      default focus - is set to the data table as soon as the application is open.  Use the 'j' and 'k' keys to move up and down the list.
-    </div>
-    <div>
-      esc - shortcut['esc']
-    </div>
-  </div>
-  
+  <v-container class="">
+    <v-card>
+      <v-row dense>
+        <div>
+          <h1>Usage</h1>
+          <p> * <b>default trap focus</b> is set to the data table as soon as the application is open.  Use the <b>j</b> and <b>k</b> keys to move up and down the list. </p>
+          <p> * <b>ctrl+m</b> to open up the navigation menu.  Use the <b>j</b> and <b>k</b> keys to move up and down the list  <br />
+          You can use <b>ctrl+m</b> or <b>esc</b> key to close the navigation.
+          </p>
+          <p> * <b>focus trap</b> is the vuetify component that is trapped and allows you to use the 'j' and 'k' shortcuts to change the selections. <br />
+          You can also use the <b>tab</b> key to circle through the fields. </p>
+          <p> * <b>focus trap components</b> the following are vuetify components that can be trapped: <br />
+          1. Data table<br />
+          2. Navigation<br />
+          2. Dialogs
+          </p>
+
+        </div>
+      </v-row>
+      <v-divider>
+      </v-divider>
+      <v-row dense>
+        <v-col class="d-flex justify-center">
+          <h1>Shortcut</h1>
+        </v-col>
+        <v-col class="d-flex justify-center">
+          <h1>Description</h1>
+        </v-col>
+      </v-row>
+      <v-row 
+        dense
+        v-for="(s, i) in shortcuts"
+          :key="i"
+        >
+          <v-col class="d-flex justify-center" align-self="center">
+            {{ s.shortcut}}
+          </v-col>
+          <v-col>
+            {{ s.description}}
+          </v-col>
+      </v-row>
+    </v-card>
+  </v-container>
 </template>
 <script>
 
@@ -15,19 +49,17 @@ export default {
   name: 'Shortcuts',
   data () {
     return {
+      shortcutDialog: false,
       shortcuts: [
-        {'icon':'','title':'More', 'shortcut':'m', 'description':'show more clip data.  If the selection is an image dialog will appear, displaying more of the image'}, 
-        {'icon':'','shortcut':'j', 'description':'moved the selected row one down'}, 
-        {'icon':'','shortcut':'k', 'description':'move selection row one up'},
-        {'icon':'','shortcut':'ctrl+l', 'description':'select the next page'}, 
-        {'icon':'','shortcut':'ctrl+h', 'description': 'select the previous page'}, 
-        {'icon':'','shortcut':'ctrl+n', 'description':'will change the layout focus'}, 
-        {'icon':'','shortcut':'ctrl+k', 'description': 'will change the layout focus'}, 
-        {'icon':'','shortcut':'alt+n', 'description': 'will open up the dialog for a new snip entry'}, 
+        {'icon':'','shortcut':'m', 'description':'Show more clip data.  If the selection is an image dialog will appear, displaying a bigger image'}, 
+        {'icon':'','shortcut':'j', 'description':'Moved the selected row one down'}, 
+        {'icon':'','shortcut':'k', 'description':'Move selection row one up'},
+        {'icon':'','shortcut':'l', 'description':'Select the next page'}, 
+        {'icon':'','shortcut':'h', 'description': 'Select the previous page'}, 
+        {'icon':'','shortcut':'alt+n', 'description': 'Will open up the dialog for a new ClipSnip entry'}, 
         {'icon':'','shortcut':'e', 'description':'edit current selected clip'},
         {'icon':'','shortcut':'x','description':'delete currenct selected clip'}, 
-        {'icon':'','shortcut':'x','description':'delete currenct selected clip'}, 
-        {'icon':'','shortcut':'esc','description':'esc will close th eimage dialog and reset the default focus back to the data table'}, 
+        {'icon':'','shortcut':'esc','description':'esc will close the image dialog and reset the default focus back to the data table'}, 
         {'icon':'','shortcut':'/','description':'will send the cursor to the data table search field'}, 
       ],
     }

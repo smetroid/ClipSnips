@@ -289,6 +289,9 @@ export default {
 
     return id
   },
+  /**
+   * 
+   */
   getPage(index, key, pages){
     var id = null
     switch(key){

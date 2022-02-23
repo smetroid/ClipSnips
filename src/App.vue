@@ -1,7 +1,6 @@
 <template>
   <v-app>
-    <div
-    >
+    <div>
       <focus-trap v-model="drawerTrap">
         <div 
           id="trapDiv" tabindex="-1"
@@ -45,23 +44,27 @@
     <!-- Sizes your content based upon application components -->
     <v-main class="ml-13 pa-0">
       <v-card>
-        <ClipList />
+        <v-dialog 
+          max-width="600px"
+          v-model="shortcutDialog">
+          <Shortcuts />
+        </v-dialog>
       </v-card>
       <v-card>
-        <Shortcuts />
-      </v-card>
-      <v-card>
+        <v-dialog 
+          max-width="600px"
+          v-model="settingsDialog">
         <Settings />
+        </v-dialog>
+      </v-card>
+      <v-card>
+        <ClipList />
       </v-card>
 
       <!-- Provides the application the proper gutter -->
-
-        <!-- If using vue-router -->
-        <!--<router-view></router-view> -->
     </v-main>
 
     <v-footer app>
-      <!-- -->
     </v-footer>
   </v-app>
 </template>
@@ -92,7 +95,9 @@ export default {
       currentMenuLink: null,
       drawerTrap: false,
       mini: true,
-      focusedIndex: null
+      focusedIndex: null,
+      shortcutDialog: false,
+      settingsDialog: false
     }
   },
   mounted () {
@@ -104,9 +109,16 @@ export default {
         this.drawerTrap = true
       })
     }) 
+    this.$root.$on('showShortcutDialog', () => {
+      this.shortcutDialog = true
+    }) 
+    this.$root.$on('showSettingsDialog', () => {
+      this.settingsDialog = true
+    }) 
   },
   methods: {
     keyPress (event) {
+      console.log(event)
       console.log('kepress')
       console.log(this.$refs.nav)
       if (event.key == "j" || event.key == "k") {
@@ -118,6 +130,9 @@ export default {
       if ((event.altKey === true && event.key === 'm') ||
           (event.key === 'esc')) {
         this.esc()
+      }
+      if (event.shiftKey === true && event.key === '?') {
+        this.sortcutDialog = true
       }
     },
     navigate (link) {

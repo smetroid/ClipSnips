@@ -339,32 +339,10 @@ export default {
       //console.log(items)
       switch(event.key){
         case '/':
-          // data = {aciveWindow: "Menu", trap: 'd3ActionsTrap'}
-          // console.log(component.activeWindow)
-          //component.active = 'Menu'
-          //component.menuTrap = true
           break;
           // return data
         case 'Escape':  //
-          /*On escape setting activeWindow D3Dagre */
-          // component.active = 'D3Dagre'
-          // component.menuTrap = false
-          // component.showMenu = false
           break
-        // case 'j':
-        //   this.focusedIndex = Utils.getIndex(this.focusedIndex, event.key, this.itemsPerPage)
-        //   break
-        // case 'k':
-        //   this.focusedIndex = Utils.getIndex(this.focusedIndex, event.key, this.itemsPerPage)
-        //   break
-        // case 'l':
-        //   this.page = Utils.getPage(this.page, event.key, this.totalPages)
-        //   //this.focusedIndex = 0
-        //   break
-        // case 'h':
-        //   this.page = Utils.getPage(this.page, event.key, this.totalPages)
-        //   //this.focusedIndex = 0
-        //   break
         case 'Enter':
           if (Utils.debug){
             // console.log('enter')
@@ -372,26 +350,13 @@ export default {
             // console.log(component.gNavMenu)
             // console.log(component.selectedUrl)
           }
-          // component.$refs.menu[component.gNavMenu].$el.click()
-          // //this.addNodeFormVisible = true
-          // //console.log(this.addNodeFormVisible)
-          // // this.navAction(ref)
-          // component.d3ActionsTrap = false
-          // component.fab = false
           break
         case 'f':
-          // var text = document.createTextNode('f')
-          // let node = '<div class="hints"> ff </div>'
-          //component.navActions = !component.navActions
           var hrefs = document.querySelectorAll('a')
           console.log(hrefs)
-          //component.forwardHrefs(hrefs)
-          // this.addFollowLinks()
           break
         default:
           console.log('App Event Key Default')
-          //data = {aciveWindow: "Main", trap: ''}
-          // return data
       }
 
       if (event.key === 'j' || event.key === 'k') {
@@ -441,6 +406,15 @@ export default {
         this.formDialog
         //var item = db.getCommand(this.selectedRowId)
       }
+
+      if (event.shiftKey === true && event.key === '?') {
+        this.$root.$emit('showShortcutDialog')
+      }
+
+      if (event.altKey === true && event.key === 's') {
+        this.$root.$emit('showSettingsDialog')
+      }
+
     },
     save (){
     },
