@@ -36,7 +36,8 @@
               <tr
                 item=item 
                 >
-                <div :class="selectedRowId == item.id?'rowSelected':''">
+                <div 
+                  :class="selectedRowId == item.id?'rowSelected blue-grey':''">
                 </div>
                 <!--
                   displays items sent directly by the query, not in the order expected
@@ -64,15 +65,16 @@
                         <span v-html="item.clip.html"></span>
                         </v-card>
                       </div>
-                      <v-container fluid>
+                      <v-container fluid class="ma-0 pt-2">
                         <v-row
+                          align-content="center"
                           justify="space-between" 
                           dense
                           >
                           <v-col cols="4">
                             <span 
                               class="blue--text text--lighten--1" 
-                              v-html="item.date"></span> | 
+                              v-html="item.date"></span>
                           </v-col>
                           <v-col>
                             <span 
@@ -81,23 +83,21 @@
                           <v-col>
                             <v-icon 
                               color="yellow">mdi-star-outline
-                            </v-icon> |
+                            </v-icon>
                           </v-col>
                           <v-col>
                             <v-icon small
                               class="mr-2"
                               color="green"
                               @click="editItem(item)"
-                            >
-                              mdi-pencil |
+                            >mdi-pencil
                             </v-icon>
                           </v-col>
                           <v-col>
                             <v-icon small
                               color="red"
                               @click="deleteItem(item)"
-                            >
-                              mdi-delete
+                            >mdi-delete
                             </v-icon>
                           </v-col>
                           <v-col>
@@ -131,7 +131,7 @@
                         style="width: 200px; height:200px">
                         </v-img>
                       </div>
-                      <v-container fluid>
+                      <v-container fluid class="ma-0 pt-1">
                         <v-row 
                           justify="space-between" 
                           dense
@@ -520,9 +520,7 @@ export default {
     background-color: rgba(0,0,0,0);
 }
 .rowSelected {
-  border-color: #ccc;
   display: table-cell;
-  background: orange;
   width: 4px
 }
 </style>
