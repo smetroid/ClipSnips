@@ -1,16 +1,20 @@
 <template>
     <div
-      scrollable
       @keydown.stop.prevent="keyPress($event, $refs.menu)"
       @keypress.stop.prevent="keyPress($event, $refs.menu)"
     >
-      <focus-trap v-model="listTrap">
-        <div
+      <focus-trap v-model="listTrap" style="outline: none;">
+        <div class="ma-1 pa-0"
           id="trapDiv" tabindex="-1">
-          <v-data-table dense ref="list" :headers="headers"
-            :items="history" item-key="id" :search="search"
+          <v-data-table dense ref="list" 
+            :headers="headers"
+            :items="history" 
+            item-key="id" 
+            :search="search"
             :items-per-page="itemsPerPage" 
-            class="scroll-enabled" :page.sync="page"
+            class="scroll-enabled elevation-5" 
+            :page.sync="page"
+            width="400px"
             >
             <v-pagination
               v-model="page"
@@ -20,14 +24,20 @@
               <br/>
               <v-text-field 
                 @keypress.stop=""
-                v-model="search" label="   Search String (/)" class="ml-4" />
+                v-model="search" 
+                label="Search String (/)" 
+                append-icon="mdi-magnify"
+                />
             </template>
             <template v-slot:item="{ item }">
             <!--
             <template slot="{ item }" slot-scope="props">
             -->
               <tr
-                item=item :class="selectedRowId == item.id?'blue-grey darken-3':''" >
+                item=item 
+                >
+                <div :class="selectedRowId == item.id?'rowSelected':''">
+                </div>
                 <!--
                   displays items sent directly by the query, not in the order expected
                 <td v-for="key in Object.keys(item)" :key="key">{{ item[key] }}</td>
@@ -36,131 +46,143 @@
                   <td v-for="key in Object.keys(props.item)" :key="key">{{props.item[key]}}</td>
                 <td>{{ item.id }}</td>
                 -->
-                  <td>
+                  <td class="ma-0 pa-1">
                     <div v-if="`${item.clip.type}` === 'text'">
-                      <div v-if="item.clip.text.length < 200">
-                        {{ item.clip.text }}
+                      <v-dialog 
+                        v-model="readMore[item.id]"
+                        >
+                        <v-card 
+                          class="overflow-auto ma-0 pa-1"> 
+                          <span v-html="item.clip.html">
+                          </span>
+                        </v-card>
+                      </v-dialog>
+                      <div v-if="!readMore[item.id]">
+                        <v-card
+                          max-height="100px"
+                          class="overflow-auto ma-0 pa-1"> 
+                        <span v-html="item.clip.html"></span>
+                        </v-card>
                       </div>
-                      <div v-else-if="item.clip.text.length > 200">
-                        <div v-if="!readMore[item.id]">
-                          {{item.clip.text.substring(0, 200) + " ..."}}
-                          <v-btn 
-                            v-if="!readMore[item.id]"
-                            outlined
-                            x-small @click="showMore(item.id)" 
-                            >Show more (m)
-                          </v-btn>
-                        </div>
-                      </div>
-                      <div v-if="readMore[item.id]" >
-                        {{ item.clip.text }}
-                        <v-btn 
-                          v-if="readMore[item.id]" x-small
-                          outlined
-                          @click="showLess(item.id)" 
-                          >Show less (m)
-                        </v-btn>
-                      </div>
-                      <span class="green--text" v-html="item.date"></span> | <span class="orange--text"> Tags </span>
-                      <span class="orange--text">{{ item.tags }}</span> | <v-icon color="yellow">mdi-star-outline</v-icon> |
-                      <span v-html="item.favorite"></span>
-                      <v-icon small
-                        color="green"
-                        class="mr-2"
-                        @click="editItem(item)"
-                      >
-                        mdi-pencil
-                      </v-icon>
-                      <v-icon small
-                        color="red"
-                        @click="deleteItem(item)"
-                      >
-                        mdi-delete
-                      </v-icon>
-                    </div>
-                    <div v-if="`${item.clip.type}` === 'html'">
-                      <div v-if="item.clip.html.length > 200">
-                        <div v-if="!readMore[item.id]">
-                          <span v-html="item.clip.text.substring(0, 200)"></span>
-                          <v-btn 
-                            v-if="!readMore[item.id]"
-                            outlined
-                            x-small 
-                            @click="showMore(item.id)" 
-                            >Show more
-                          </v-btn>
-                        </div>
-                      </div>
-                      <div v-if="readMore[item.id]" >
-                        <span v-html=item.clip.html></span>
-                        <v-btn 
-                          v-if="readMore[item.id]" 
-                          outlined
-                          x-small
-                          @click="showLess(item.id)" 
-                          >Show less (m)
-                        </v-btn>
-                      </div>
-                      <span class="green--text" v-html="item.date"></span> | <span class="orange--text"> Tags </span> 
-                      <span color="teal" v-html="item.tags"> {{ item.tangs }} </span> | <v-icon color="yellow">mdi-star-outline</v-icon> |
-                      <span v-html="item.favorite"></span>
-                      <v-icon small
-                        color="green"
-                        class="mr-2"
-                        @click="editItem(item)"
-                      >
-                        mdi-pencil
-                      </v-icon>
-                      <v-icon small
-                        color="red"
-                        @click="deleteItem(item)"
-                      >
-                        mdi-delete
-                      </v-icon>
+                      <v-container fluid>
+                        <v-row
+                          justify="space-between" 
+                          dense
+                          >
+                          <v-col cols="4">
+                            <span 
+                              class="blue--text text--lighten--1" 
+                              v-html="item.date"></span> | 
+                          </v-col>
+                          <v-col>
+                            <span 
+                            class="orange--text"> Tags </span>  
+                          </v-col>
+                          <v-col>
+                            <v-icon 
+                              color="yellow">mdi-star-outline
+                            </v-icon> |
+                          </v-col>
+                          <v-col>
+                            <v-icon small
+                              class="mr-2"
+                              color="green"
+                              @click="editItem(item)"
+                            >
+                              mdi-pencil |
+                            </v-icon>
+                          </v-col>
+                          <v-col>
+                            <v-icon small
+                              color="red"
+                              @click="deleteItem(item)"
+                            >
+                              mdi-delete
+                            </v-icon>
+                          </v-col>
+                          <v-col>
+                            <v-btn 
+                              v-if="readMore[item.id]" 
+                              x-small
+                              outlined
+                              @click="imageDialog = false" 
+                              >Show less (m)
+                            </v-btn>
+                            <v-btn 
+                              v-if="!readMore[item.id]"
+                              outlined
+                              x-small
+                              @click="imageDialog = true" 
+                              >Show more (m)
+                            </v-btn>
+                          </v-col>
+                        </v-row>
+                      </v-container>
                     </div>
                     <div v-if="`${item.clip.type}` === 'image'">
                       <v-dialog v-model='imageDialog'>
                         <v-img v-bind:src="`${item.clip.buffer}`" 
-                        style="width: 800px; height:800px">
+                          style="width: 800px; height:800px">
                         </v-img>
-                        <v-btn 
-                          v-if="readMore[item.id]" 
-                          x-small
-                          outlined
-                          @click="imageDialog = false" 
-                          >Show less (m)
-                        </v-btn>
                       </v-dialog>
-                      <div v-if="!readMore[item.id]">
+                      <div 
+                        v-if="!readMore[item.id]">
                         <v-img v-bind:src="`${item.clip.thumbBuffer}`" 
                         style="width: 200px; height:200px">
                         </v-img>
-                        <v-btn 
-                          v-if="!readMore[item.id]"
-                          outlined
-                          x-small
-                          @click="imageDialog = true" 
-                          >Show more (m)
-                        </v-btn>
-                        </div>
-                      <div v-if="readMore[item.id]" >
                       </div>
-                      <span class="green--text" v-html="item.date"></span> | <span class="orange--text"> Tags </span>  
-                      <span color="orange--text" v-html="item.tags"></span> | <v-icon color="yellow">mdi-star-outline</v-icon> |
-                      <span v-html="item.favorite"></span>
-                      <v-icon small
-                        class="mr-2"
-                        color="green"
-                        @click="editItem(item)"
-                      >
-                        mdi-pencil
-                      </v-icon>
-                      <v-icon small
-                        color="red"
-                        @click="deleteItem(item)"
-                      >
-                        mdi-delete
-                      </v-icon>
+                      <v-container fluid>
+                        <v-row 
+                          justify="space-between" 
+                          dense
+                          >
+                          <v-col cols="4">
+                            <span 
+                              class="blue--text text--lighten--1" 
+                              v-html="item.date"></span>
+                          </v-col>
+                          <v-col>
+                            <span 
+                            class="orange--text"> Tags </span>  
+                          </v-col>
+                          <v-col>
+                            <v-icon 
+                              color="yellow">mdi-star-outline
+                            </v-icon>
+                          </v-col>
+                          <v-col>
+                            <v-icon
+                              class="mr-2"
+                              color="green"
+                              @click="editItem(item)"
+                            >mdi-pencil
+                            </v-icon>
+                          </v-col>
+                          <v-col>
+                            <v-icon
+                              color="red"
+                              @click="deleteItem(item)"
+                            >mdi-delete
+                            </v-icon>
+                          </v-col>
+                          <v-col>
+                            <v-btn 
+                              v-if="readMore[item.id]" 
+                              x-small
+                              outlined
+                              @click="imageDialog = false" 
+                              >Show less (m)
+                            </v-btn>
+                            <v-btn 
+                              v-if="!readMore[item.id]"
+                              outlined
+                              x-small
+                              @click="imageDialog = true" 
+                              >Show more (m)
+                            </v-btn>
+                          </v-col>
+                        </v-row>
+                      </v-container>
                     </div>
                   </td>
               </tr>
@@ -171,23 +193,20 @@
               -->
             </template>
           </v-data-table>
-        </div>
-      </focus-trap>
-        <ClipForm />
-    </div>
+      </div>
+    </focus-trap>
+  </div>
 </template>
 <script>
 // const { ipcRenderer } = require('electron')
 // const { clipboard } = require('electron')
 import { ClipboardWatcher } from '@/core/clipboard-watcher'
 import Utils from '@/helpers/Utils'
-import ClipForm from '@/components/ClipForm'
 let rendererChannel = null
 import { DBApi } from '@/core/Api.js'
 const db = new DBApi()
 import {EVENT} from '@/core/cmdrConstants'
 export default {
-  components: {ClipForm},
   name: 'ClipList',
   // NOTE: props need an array[] prop is a single string -EC-
   // props: ['active', 'test'],
@@ -404,6 +423,7 @@ export default {
 
       if (event.key === 'e') {
         this.formDialog
+        this.$root.$emit('showClipformDialog', this.selectedRowId)
         //var item = db.getCommand(this.selectedRowId)
       }
 
@@ -479,11 +499,11 @@ export default {
 <style scoped>
 .scroll_enabled {
     overflow: scroll;
-    height: 1000px; /* define your custom height */
+    height: 60%; /* define your custom height */
 }
 
 .scroll_enabled::-webkit-scrollbar {
-    width: 20px;
+    width: 15px;
 }
 .scroll_enabled::-webkit-scrollbar-corner {
     background: rgba(0,0,0,0);
@@ -499,4 +519,17 @@ export default {
 .scroll_enabled::-webkit-scrollbar-track {
     background-color: rgba(0,0,0,0);
 }
+.rowSelected {
+  border-color: #ccc;
+  display: table-cell;
+  background: orange;
+  width: 4px
+}
+</style>
+<style lang="scss">  
+  tbody {
+     tr:hover {
+        background-color: transparent !important;
+     }
+  }
 </style>

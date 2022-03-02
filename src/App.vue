@@ -45,20 +45,30 @@
     <v-main class="ml-13 pa-0">
       <v-card>
         <v-dialog 
-          max-width="600px"
+          scrollable
+          max-width="700px"
           v-model="shortcutDialog">
-          <Shortcuts />
+          <v-card class="ma-0 pa-3">
+            <Shortcuts />
+          </v-card>
         </v-dialog>
       </v-card>
       <v-card>
         <v-dialog 
           max-width="600px"
           v-model="settingsDialog">
-        <Settings />
+          <v-card>
+            <Settings />
+          </v-card>
         </v-dialog>
       </v-card>
       <v-card>
-        <ClipList />
+        <ClipSnipList />
+      </v-card>
+      <v-card>
+        <ClipSnipForm
+          :id="snipClipId"
+        />
       </v-card>
 
       <!-- Provides the application the proper gutter -->
@@ -71,16 +81,18 @@
 
 <script>
 import Utils from '@/helpers/Utils'
-import ClipList from './components/ClipList'
-import Shortcuts from './components/Shortcuts'
-import Settings from './components/Settings'
+import ClipSnipList from '@/components/ClipSnipList'
+import Shortcuts from '@/components/Shortcuts'
+import Settings from '@/components/Settings'
+import ClipSnipForm from '@/components/ClipSnipForm'
 
 export default {
   name: 'App',
   components: {
-    ClipList,
+    ClipSnipList,
     Shortcuts,
-    Settings
+    Settings,
+    ClipSnipForm
   },
   data () {
     return {
@@ -97,7 +109,9 @@ export default {
       mini: true,
       focusedIndex: null,
       shortcutDialog: false,
-      settingsDialog: false
+      settingsDialog: false,
+      clipformDialog: false,
+      snipClipId: null
     }
   },
   mounted () {
@@ -114,6 +128,10 @@ export default {
     }) 
     this.$root.$on('showSettingsDialog', () => {
       this.settingsDialog = true
+    }) 
+    this.$root.$on('showCliformDialog', (id) => {
+      this.clipformDialog = true
+      this.snipClipId = id
     }) 
   },
   methods: {

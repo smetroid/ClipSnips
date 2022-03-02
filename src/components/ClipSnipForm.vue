@@ -78,16 +78,34 @@
   </v-row>
 </template>
 <script>
+import { DBApi } from '@/core/Api.js'
+const db = new DBApi()
 export default {
   name: 'ClipForm',
-  props: ['clipId'],
+  props: ['id'],
   data() {
     return {
       formDialog: false,
-      update: false
+      update: false,
+      title: 'New ClipSnip Default Title',
+      description: 'New ClipSnip Default Description',
+      tags: null,
+      isFavorite: false,
+      isTrash: false,
+      date:  Date.now(),
+      clip: 'Clip Snippet '
     }
   },
   methods: {
+    mounted () {
+      var snipClip = db.getCommand(this.id)
+      this.title = snipClip.title
+      this.description = snipClip.description
+      this.isFavorite = snipClip.isFavorite
+      this.isTrash = snipClip.isTrash
+      this.date = snipClip.date
+      this.snip = snipClip.snip
+    },
     create () {
 
     },

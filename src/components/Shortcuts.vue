@@ -1,7 +1,6 @@
 <template>
-  <v-container class="">
-    <v-card>
-      <v-row dense>
+  <v-container class="scroll_enabled">
+      <v-row>
         <div>
           <h1>Usage</h1>
           <p> * <b>default trap focus</b> is set to the data table as soon as the application is open.  Use the <b>j</b> and <b>k</b> keys to move up and down the list. </p>
@@ -40,7 +39,6 @@
             {{ s.description}}
           </v-col>
       </v-row>
-    </v-card>
   </v-container>
 </template>
 <script>
@@ -66,3 +64,28 @@ export default {
     }
 }
 </script>
+<!-- Add "scoped" attribute to limit CSS to this component only -->
+<style scoped>
+.scroll_enabled {
+    overflow: scroll;
+    height: 600px; /* define your custom height */
+}
+
+.scroll_enabled::-webkit-scrollbar {
+    width: 15px;
+}
+.scroll_enabled::-webkit-scrollbar-corner {
+    background: rgba(0,0,0,0);
+}
+.scroll_enabled::-webkit-scrollbar-thumb {
+    background-color: #e6e6e6;
+    border-radius: 6px;
+    border: 4px solid rgba(0,0,0,0);
+    background-clip: content-box;
+    min-width: 32px;
+    min-height: 32px;
+}
+.scroll_enabled::-webkit-scrollbar-track {
+    background-color: rgba(0,0,0,0);
+}
+</style>
