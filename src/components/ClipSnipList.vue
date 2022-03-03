@@ -206,6 +206,8 @@ let rendererChannel = null
 import { DBApi } from '@/core/Api.js'
 const db = new DBApi()
 import {EVENT} from '@/core/cmdrConstants'
+import goTo from 'vuetify/lib/services/goto'
+// import * as easings from 'vuetify/lib/services/goto/easing-patterns'
 export default {
   name: 'ClipList',
   // NOTE: props need an array[] prop is a single string -EC-
@@ -280,7 +282,8 @@ export default {
       history: [],
       searchQuery: null,
       page: 1,
-      itemsPerPage: 5
+      itemsPerPage: 5,
+      goToVar: 100,
     }
   },
   computed: {
@@ -383,6 +386,8 @@ export default {
         console.log(this.$refs.list.selectableItems[this.focusedIndex])
         this.selectedRow = this.$refs.list.selectableItems[this.focusedIndex]
         this.selectedRowId = this.$refs.list.selectableItems[this.focusedIndex].id
+        this.goToVar = (this.focusedIndex * 100)
+        goTo(this.goToVar, this.options)
       }
 
       if (event.key === 'l' || event.key === 'h') {
@@ -472,6 +477,13 @@ export default {
       // this.$root.$emit('d3DagreActivate')
       // this.$root.$emit('showForm', 'node')
     },
+    options () {
+      return {
+        duration: 734,
+        offset: -168,
+        easing: 'easeInOutCubic'
+      }
+    }
     // Resetdatabase() {
     //   this.history = []
     //   database.remove({}, { multi: true }, function (err, numRemoved) {
@@ -521,7 +533,12 @@ export default {
 }
 .rowSelected {
   display: table-cell;
-  width: 4px
+  /*
+  border-radius: 10px;
+  box-shadow: 0 0 10px #9ecaed;
+  background: orange;
+  */
+  width: 5px
 }
 </style>
 <style lang="scss">  
