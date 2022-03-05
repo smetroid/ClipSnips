@@ -1,6 +1,6 @@
 <template>
     <div
-      @keydown.stop.prevent="keyPress($event)" 
+      @keydown.alt="keyPress($event)"
       @keypress.stop.prevent="keyPress($event)"
     >
       <focus-trap v-model="listTrap" ref="trap" style="outline: none;">
@@ -24,8 +24,8 @@
               <br />
               <v-text-field 
                 ref="search"
-                @keydown.esc="keyPress($event)"
                 @keypress.stop=""
+                @keydown.esc="keyPress($event)"
                 v-model="searchQuery" 
                 label="Search String (/)" 
                 append-icon="mdi-magnify"
@@ -472,11 +472,11 @@ export default {
       db.deleteCommandById(item.id)
       this.history = db.getAllCommands()
     },
-    filter (value, search) {
+    filter (value, searchQuery) {
       return value != null &&
-        search != null &&
+        searchQuery != null &&
         typeof value === 'string' &&
-        value.toString().indexOf(search) !== -1
+        value.toString().indexOf(searchQuery) !== -1
     },
     getDiagrams: async function() {
       // var result = await D3VimApi.getDiagrams()
