@@ -1,9 +1,9 @@
 <template>
     <div
-      @keydown.stop.prevent="keyPress($event, $refs.menu)"
-      @keypress.stop.prevent="keyPress($event, $refs.menu)"
+      @keydown.stop.prevent="keyPress($event)" 
+      @keypress.stop.prevent="keyPress($event)"
     >
-      <focus-trap v-model="listTrap" style="outline: none;">
+      <focus-trap v-model="listTrap" ref="trap" style="outline: none;">
         <div class="ma-1 pa-0"
           id="trapDiv" tabindex="-1">
           <v-data-table dense ref="list" 
@@ -21,10 +21,12 @@
               :length="totalPages">
             </v-pagination>
             <template v-slot:top>
-              <br/>
+              <br />
               <v-text-field 
+                ref="search"
+                @keydown.esc="keyPress($event)"
                 @keypress.stop=""
-                v-model="search" 
+                v-model="searchQuery" 
                 label="Search String (/)" 
                 append-icon="mdi-magnify"
                 />
@@ -379,6 +381,18 @@ export default {
           break
         default:
           console.log('App Event Key Default')
+      }
+
+      if (event.key === 'Escape'){
+        console.log('esc')
+        // console.log(this)
+        this.$refs.search.blur()
+        this.$refs.trap.$el.focus()
+      }
+
+      if (event.key === '/') {
+        this.$refs.search.focus()
+        goTo(10, this.options)
       }
 
       if (event.key === 'j' || event.key === 'k') {
