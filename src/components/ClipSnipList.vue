@@ -21,12 +21,12 @@
               :length="totalPages">
             </v-pagination>
             <template v-slot:top>
-              <br />
               <v-text-field 
+                class-x-4
                 ref="search"
                 @keypress.stop=""
                 @keydown.esc="keyPress($event)"
-                v-model="searchQuery" 
+                v-model="search" 
                 label="Search String (/)" 
                 append-icon="mdi-magnify"
                 />
@@ -211,7 +211,7 @@ import {EVENT} from '@/core/cmdrConstants'
 import goTo from 'vuetify/lib/services/goto'
 // import * as easings from 'vuetify/lib/services/goto/easing-patterns'
 export default {
-  name: 'ClipList',
+  name: 'ClipSnipList',
   // NOTE: props need an array[] prop is a single string -EC-
   // props: ['active', 'test'],
   data () {
@@ -233,7 +233,7 @@ export default {
       },
       headers: [
         // {text: 'Id', value: 'id', sortable: false},
-        // {text: 'Name', value: 'name', sortable: true},
+        {text: 'SnipClip', value: 'clip.html', sortable: true, align: ' d-none'},
         // {text: 'Description', value: 'description'},
         // {text: 'Created', value: 'created'},
         // {text: 'Updated', value: 'updated'},
@@ -282,10 +282,10 @@ export default {
       //          },
       //        ],
       history: [],
-      searchQuery: null,
       page: 1,
       itemsPerPage: 5,
       goToVar: 100,
+      hideClipSnip: true
     }
   },
   computed: {
@@ -295,15 +295,6 @@ export default {
     totalPages () {
       var pages = Math.ceil(this.history.length / this.itemsPerPage)
       return pages
-    },
-    newhistory() {
-      if (this.searchQuery) {
-        return this.history.filter((his) =>
-          his.copiedText.toLowerCase().includes(this.searchQuery),
-        )
-      } else {
-        return this.history.slice().reverse()
-      }
     },
   },
   updated() {
@@ -392,7 +383,7 @@ export default {
 
       if (event.key === '/') {
         this.$refs.search.focus()
-        goTo(10, this.options)
+        goTo(0, this.options)
       }
 
       if (event.key === 'j' || event.key === 'k') {
@@ -471,12 +462,6 @@ export default {
       }
       db.deleteCommandById(item.id)
       this.history = db.getAllCommands()
-    },
-    filter (value, searchQuery) {
-      return value != null &&
-        searchQuery != null &&
-        typeof value === 'string' &&
-        value.toString().indexOf(searchQuery) !== -1
     },
     getDiagrams: async function() {
       // var result = await D3VimApi.getDiagrams()
