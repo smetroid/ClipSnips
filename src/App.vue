@@ -12,8 +12,14 @@
             permanent
             :mini-variant.sync="mini"
           >
-            <b>CMD<br />
-              Snips</b>
+            <div class="d-flex flex-column justify-space-between align-center">
+              <v-img 
+                src="./assets/OSFLogoV6.png"
+                max-height="60"
+                max-width="60"
+                >
+              </v-img>
+            </div>
             <v-divider></v-divider>
             <v-list nav dense>
               <v-list-item link
@@ -118,10 +124,8 @@ export default {
     this.$root.$on('sendFocusToMenu', () => {
       this.drawer = true
       this.mini = false
-      this.$nextTick(function(){
-        console.log('menuTrap active')
-        this.drawerTrap = true
-      })
+      this.drawerTrap = true
+      console.log('menuTrap active')
     }) 
     this.$root.$on('showShortcutDialog', () => {
       this.shortcutDialog = true
