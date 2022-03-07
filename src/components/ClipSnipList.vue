@@ -296,6 +296,10 @@ export default {
       var pages = Math.ceil(this.history.length / this.itemsPerPage)
       return pages
     },
+    itemDiff () {
+      var items = (this.page * this.itemsPerPage) - this.history.length
+      return items
+    },
   },
   updated() {
     console.log('updated')
@@ -387,8 +391,13 @@ export default {
       }
 
       if (event.key === 'j' || event.key === 'k') {
-        this.focusedIndex = Utils.getIndex(this.focusedIndex, event.key, this.itemsPerPage)
-        console.log(this.$refs.list.selectableItems[this.focusedIndex])
+        if ( this.itemDiff > 0 ) {
+          var itemsInPage = this.itemsPerPage - this.itemDiff
+          this.focusedIndex = Utils.getIndex(this.focusedIndex, event.key, itemsInPage)
+        } else {
+          this.focusedIndex = Utils.getIndex(this.focusedIndex, event.key, this.itemsPerPage)
+        }
+
         this.selectedRow = this.$refs.list.selectableItems[this.focusedIndex]
         this.selectedRowId = this.$refs.list.selectableItems[this.focusedIndex].id
         this.goToVar = (this.focusedIndex * 100)
