@@ -55,7 +55,7 @@
                         v-model="readMore[item.id]"
                         >
                         <v-card 
-                          class="overflow-auto ma-0 pa-1"> 
+                          class="scroll_enabled ma-0 pa-1"> 
                           <span v-html="item.clip.html">
                           </span>
                         </v-card>
@@ -63,8 +63,13 @@
                       <div v-if="!readMore[item.id]">
                         <v-card
                           max-height="100px"
-                          class="overflow-auto ma-0 pa-1"> 
-                        <span v-html="item.clip.html"></span>
+                          class="scroll_enabled ma-0 pa-1"> 
+                          <div v-if="`${item.clip.html}` === ''"> 
+                            {{ item.clip.text }}
+                          </div>
+                          <div else >
+                            <span v-html="item.clip.html" />
+                          </div>
                         </v-card>
                       </div>
                       <v-container fluid class="ma-0 pt-2">
@@ -154,6 +159,7 @@
                           </v-col>
                           <v-col>
                             <v-icon
+                              small
                               class="mr-2"
                               color="green"
                               @click="editItem(item)"
@@ -162,6 +168,7 @@
                           </v-col>
                           <v-col>
                             <v-icon
+                              small
                               color="red"
                               @click="deleteItem(item)"
                             >mdi-delete
@@ -454,6 +461,15 @@ export default {
         this.$root.$emit('showSettingsDialog')
       }
 
+      // Create new ClipSnippet
+      if (event.key === 'n') {
+        this.$root.$emit('showClipformDialog')
+      }
+
+      // Create new ClipSnippet out of the clip data
+      if (event.key === 'c') {
+        this.$root.$emit('showClipformDialog')
+      }
     },
     save (){
     },
@@ -517,28 +533,6 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-.scroll_enabled {
-    overflow: scroll;
-    height: 60%; /* define your custom height */
-}
-
-.scroll_enabled::-webkit-scrollbar {
-    width: 15px;
-}
-.scroll_enabled::-webkit-scrollbar-corner {
-    background: rgba(0,0,0,0);
-}
-.scroll_enabled::-webkit-scrollbar-thumb {
-    background-color: #ccc;
-    border-radius: 6px;
-    border: 4px solid rgba(0,0,0,0);
-    background-clip: content-box;
-    min-width: 32px;
-    min-height: 32px;
-}
-.scroll_enabled::-webkit-scrollbar-track {
-    background-color: rgba(0,0,0,0);
-}
 .rowSelected {
   display: table-cell;
   /*

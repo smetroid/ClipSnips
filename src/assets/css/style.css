@@ -1,0 +1,49 @@
+html {
+  /*overflow: hidden !important;*/
+    overflow-x: auto;
+    overflow-y: auto;
+    height: 725px;
+    width: 600px;
+}
+html::-webkit-scrollbar {
+    width: 15px;
+}
+html::-webkit-scrollbar-corner {
+    background: rgba(0,0,0,0);
+}
+html::-webkit-scrollbar-thumb {
+    background-color: #e6e6e6b2;
+    border-radius: 1px;
+    border: 1px solid rgba(0,0,0,0);
+    background-clip: content-box;
+    min-width: 10px;
+    min-height: 32px;
+}
+html::-webkit-scrollbar-track {
+    background-color: rgb(58, 57, 57);
+}
+
+.scroll_enabled {
+    overflow-y: auto;
+    /*overflow-x: auto;*/
+    height: 600px; /* define your custom height */
+    width: 514px;
+}
+
+.scroll_enabled::-webkit-scrollbar {
+    width: 10px;
+}
+.scroll_enabled::-webkit-scrollbar-corner {
+    background: rgba(0,0,0,0);
+}
+.scroll_enabled::-webkit-scrollbar-thumb {
+    background-color: #e6e6e6b2;
+    border-radius: 1px;
+    border: 1px solid rgba(0,0,0,0);
+    background-clip: content-box;
+    min-width: 10px;
+    min-height: 32px;
+}
+.scroll_enabled::-webkit-scrollbar-track {
+    background-color: rgb(58, 57, 57);
+}

@@ -15,14 +15,15 @@
             <div class="d-flex flex-column justify-space-between align-center">
               <v-img 
                 src="./assets/OSFLogoV6.png"
-                max-height="60"
-                max-width="60"
+                max-height="50"
+                max-width="50"
                 >
               </v-img>
             </div>
             <v-divider></v-divider>
             <v-list nav dense>
               <v-list-item link
+                x-small
                 ref="nav"
                 v-for="(link, i) in menuLinks"
                 :key="i"
@@ -43,7 +44,15 @@
 
     <!--
     <v-app-bar class="ml-13 pa-0">
-      <v-app-bar-nav-icon @click="drawer = true"></v-app-bar-nav-icon>
+        <v-tabs fixed-tabs dark>
+          <v-tab>
+            ClipSnips
+          </v-tab>
+          <v-tab>
+            Clipboard
+          </v-tab>
+          
+        </v-tabs>
     </v-app-bar>
     -->
 
@@ -72,9 +81,12 @@
         <ClipSnipList />
       </v-card>
       <v-card>
+        <v-dialog style="overflow-y: hidden"
+          v-model="formDialog">
         <ClipSnipForm
           :id="snipClipId"
         />
+        </v-dialog>
       </v-card>
 
       <!-- Provides the application the proper gutter -->
@@ -116,7 +128,7 @@ export default {
       focusedIndex: null,
       shortcutDialog: false,
       settingsDialog: false,
-      clipformDialog: false,
+      formDialog: false,
       snipClipId: null
     }
   },
@@ -133,8 +145,8 @@ export default {
     this.$root.$on('showSettingsDialog', () => {
       this.settingsDialog = true
     }) 
-    this.$root.$on('showCliformDialog', (id) => {
-      this.clipformDialog = true
+    this.$root.$on('showClipformDialog', (id) => {
+      this.formDialog = true
       this.snipClipId = id
     }) 
   },
@@ -169,3 +181,5 @@ export default {
   }
 }
 </script>
+<style scoped>
+</style>
