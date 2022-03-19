@@ -4,7 +4,7 @@ import { app, protocol, BrowserWindow, globalShortcut } from 'electron'
 import { createProtocol } from 'vue-cli-plugin-electron-builder/lib'
 import installExtension, { VUEJS_DEVTOOLS } from 'electron-devtools-installer'
 /* Not sure if I need ipcMain  -EC- */
-import { ipcMain } from "electron";
+import { ipcMain } from "electron"
 const isDevelopment = process.env.NODE_ENV !== 'production'
 
 // Scheme must be registered before the app is ready
@@ -13,6 +13,9 @@ protocol.registerSchemesAsPrivileged([
 ])
 
 const isWindows = process.platform === "win32";
+
+const ElectronStore = require('electron-store');
+ElectronStore.initRenderer();
 
 async function createWindow() {
   // Create the browser window.
