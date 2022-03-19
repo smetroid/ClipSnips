@@ -12,7 +12,7 @@
             item-key="id" 
             :search="search"
             :items-per-page="itemsPerPage" 
-            class="scroll-enabled elevation-5" 
+            class="elevation-5" 
             :page.sync="page"
             width="400px"
             >
@@ -330,7 +330,9 @@ export default {
       this.newItem(entry)
     })
 
-    this.$root.$emit('sendFocusToDataTable', () => {
+    this.$root.$on('sendFocusToDataTable', () => {
+      console.log('datatableFOcus')
+      this.listTrap = true
     })
 
     this.$nextTick(function(){
