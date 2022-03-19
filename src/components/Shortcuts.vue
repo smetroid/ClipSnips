@@ -14,7 +14,6 @@
           2. Navigation<br />
           2. Dialogs
           </p>
-
         </div>
       </v-row>
       <v-divider>
@@ -70,7 +69,6 @@ export default {
     overflow: scroll;
     height: 600px; /* define your custom height */
 }
-
 .scroll_enabled::-webkit-scrollbar {
     width: 15px;
 }

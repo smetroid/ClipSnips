@@ -17,10 +17,9 @@ const Keys = {
 }
 
 const App = {
-    name: 'ECSnips',
-    folderName: 'snipCommand',
-    backupFolderName: 'backups',
-    dbName: 'ecsnipcommand.db'
+    name: 'ClipSnips',
+    folderName: 'clipsnips',
+    dbName: 'clipsnips.db'
 }
 
 export {MainMenus, Keys, SearchResult, App};
