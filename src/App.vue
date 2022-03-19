@@ -134,7 +134,6 @@ export default {
   },
   mounted () {
     this.$root.$on('sendFocusToMenu', () => {
-      this.drawer = true
       this.mini = false
       this.drawerTrap = true
       console.log('menuTrap active')
@@ -142,8 +141,10 @@ export default {
     this.$root.$on('showShortcutDialog', () => {
       this.shortcutDialog = true
     }) 
-    this.$root.$on('showSettingsDialog', () => {
-      this.settingsDialog = true
+    this.$root.$on('settingsDialog', (bool) => {
+      console.log('settingsDialog active')
+      this.settingsDialog = bool
+      this.esc()
     }) 
     this.$root.$on('showClipformDialog', (id) => {
       this.formDialog = true
@@ -162,11 +163,17 @@ export default {
       }
 
       if ((event.altKey === true && event.key === 'm') ||
-          (event.key === 'esc')) {
+          (event.key === 'Escape')) {
+            console.log('esc')
         this.esc()
       }
       if (event.shiftKey === true && event.key === '?') {
         this.sortcutDialog = true
+      }
+      if (event.key === 'Enter') {
+        console.log('enter')
+        this.drawerTrap = false
+        this.settingsDialog = true
       }
     },
     navigate (link) {
