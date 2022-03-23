@@ -50,6 +50,7 @@
                     >
                     </v-text-field>
                     <v-text-field
+                      v-model="token"
                       required
                       label="Token"
                       rules.token
@@ -134,7 +135,18 @@ export default {
         }
       }
     })
-    this.load()
+
+    try {
+      console.log('loading saved settings')
+      this.storagePath = this.settings.get('storagePath')
+      this.enableJoplin = this.settings.get('joplinEnabled')
+      this.token = this.settings.get('token')
+      this.server = this.settings.get('server')
+      this.notebook = this.settings.get('notebook')
+    } catch (error) {
+      console.log('loading defaults settings')
+      console.log(error)
+    }
 
     this.$nextTick(function(){
       console.log('settingsTrap active')
@@ -142,13 +154,6 @@ export default {
     })
   },
   methods: {
-    load() {
-      this.storagePath = this.settings.get('storagePath')
-      this.joplinEnabled = this.settings.get('joplinEnabled')
-      this.token = this.settings.get('token')
-      this.server = this.settings.get('server')
-      this.notebook = this.settings.get('notebook')
-    },
     save () {
       this.settings.set('storagePath', this.fileLocation)
       this.settings.set('joplinEnabled', this.enableJoplin)

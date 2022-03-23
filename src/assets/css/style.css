@@ -26,8 +26,8 @@ html::-webkit-scrollbar-track {
 .scroll_enabled {
     overflow-y: auto;
     /*overflow-x: auto;*/
-    height: 600px; /* define your custom height */
-    width: 514px;
+    height: 700px; /* define your custom height */
+    width: 534px;
 }
 
 .scroll_enabled::-webkit-scrollbar {
@@ -46,4 +46,13 @@ html::-webkit-scrollbar-track {
 }
 .scroll_enabled::-webkit-scrollbar-track {
     background-color: rgb(58, 57, 57);
+}
+
+.rows {
+    background-color: #282C34 !important;
+    height: 100px;
+}
+.more {
+    background-color: #282C34 !important;
+    height: 700px;
 }

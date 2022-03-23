@@ -5,14 +5,15 @@
     >
       <focus-trap v-model="listTrap" ref="trap" style="outline: none;">
         <div class="ma-1 pa-0"
-          id="trapDiv" tabindex="-1">
+          id="trapDiv" 
+          tabindex="-1"
+          >
           <v-data-table dense ref="list" 
             :headers="headers"
             :items="history" 
             item-key="id" 
             :search="search"
             :items-per-page="itemsPerPage" 
-            class="elevation-5" 
             :page.sync="page"
             width="400px"
             >
@@ -36,9 +37,11 @@
             <template slot="{ item }" slot-scope="props">
             -->
               <tr
+                class="rows"
                 item=item 
                 >
                 <div 
+                  class="rows"
                   :class="selectedRowId == item.id?'rowSelected blue-grey':''">
                 </div>
                 <!--
@@ -49,28 +52,34 @@
                   <td v-for="key in Object.keys(props.item)" :key="key">{{props.item[key]}}</td>
                 <td>{{ item.id }}</td>
                 -->
-                  <td class="ma-0 pa-1">
-                    <div v-if="`${item.clip.type}` === 'text'">
+                  <td class="ma-0 pa-0 rows">
+                    <div style="background-color: #282C34"
+                      v-if="`${item.clip.type}` === 'text'">
                       <v-dialog 
                         v-model="readMore[item.id]"
                         >
-                        <v-card 
-                          class="scroll_enabled ma-0 pa-1"> 
+                        <div
+                          class="scroll_enabled ma-0 pa-0 more">
                           <span v-html="item.clip.html">
                           </span>
-                        </v-card>
+                        </div>
                       </v-dialog>
-                      <div v-if="!readMore[item.id]">
-                        <v-card
-                          max-height="100px"
-                          class="scroll_enabled ma-0 pa-1"> 
-                          <div v-if="`${item.clip.html}` === ''"> 
+                      <div 
+                        class="rows"
+                        v-if="!readMore[item.id]">
+                        <div
+                          class="scroll_enabled ma-0 pa-1 rows"> 
+                          <div 
+                            class="rows"
+                            v-if="`${item.clip.html}` === ''"> 
                             {{ item.clip.text }}
                           </div>
-                          <div else >
+                          <div else 
+                            class="rows"
+                          >
                             <span v-html="item.clip.html" />
                           </div>
-                        </v-card>
+                        </div>
                       </div>
                       <v-container fluid class="ma-0 pt-2">
                         <v-row

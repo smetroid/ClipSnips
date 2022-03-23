@@ -20,8 +20,8 @@ ElectronStore.initRenderer();
 async function createWindow() {
   // Create the browser window.
   const win = new BrowserWindow({
-    width: 800,
-    height: 600,
+    width: 625,
+    height: 725,
     // frame: !isWindows,
     webPreferences: {
       

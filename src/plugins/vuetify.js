@@ -8,6 +8,7 @@ const opts = {
     dark: true,
     themes: {
       dark: {
+        background: "#282C34",
         accent: "#82B1FF",
         error: "#FF5252",
         info: "#2196F3",
