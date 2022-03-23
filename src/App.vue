@@ -1,46 +1,45 @@
 <template>
   <v-app>
-    <div>
-      <focus-trap v-model="drawerTrap">
-        <div 
-          id="trapDiv" tabindex="-1"
-          @keydown.stop.prevent="keyPress($event, $refs.nav)"
-          @keypress.stop.prevent="keyPress($event, $refs.nav)"
-          >
-          <v-navigation-drawer
-            app
-            permanent
-            :mini-variant.sync="mini"
-          >
-            <div class="d-flex flex-column justify-space-between align-center">
-              <v-img 
-                src="./assets/OSFLogoV6.png"
-                max-height="50"
-                max-width="50"
-                >
-              </v-img>
-            </div>
-            <v-divider></v-divider>
-            <v-list nav dense>
-              <v-list-item link
-                x-small
-                ref="nav"
-                v-for="(link, i) in menuLinks"
-                :key="i"
-                :class="currentMenuLink == link.name?'blue-grey':''"
-                @click="navigate(link.name)"
+    <focus-trap v-model="drawerTrap">
+      <div 
+        id="trapDiv" tabindex="-1"
+        @keydown.stop.prevent="keyPress($event, $refs.nav)"
+        @keypress.stop.prevent="keyPress($event, $refs.nav)"
+        >
+        <v-navigation-drawer
+          class="rows"
+          app
+          permanent
+          :mini-variant.sync="mini"
+        >
+          <div class="d-flex flex-column justify-space-between align-center">
+            <v-img 
+              src="./assets/OSFLogoV6.png"
+              max-height="50"
+              max-width="50"
               >
-                <v-list-item-icon>
-                  <v-icon v-text="link.icon"></v-icon>
-                </v-list-item-icon>
-                <v-list-item-title v-text=link.name></v-list-item-title>
-              </v-list-item>
-            </v-list>
-            <v-divider></v-divider>
-          </v-navigation-drawer>
-        </div>
-      </focus-trap>
-    </div>
+            </v-img>
+          </div>
+          <v-divider></v-divider>
+          <v-list nav dense>
+            <v-list-item link
+              x-small
+              ref="nav"
+              v-for="(link, i) in menuLinks"
+              :key="i"
+              :class="currentMenuLink == link.name?'blue-grey':''"
+              @click="navigate(link.name)"
+            >
+              <v-list-item-icon>
+                <v-icon v-text="link.icon"></v-icon>
+              </v-list-item-icon>
+              <v-list-item-title v-text=link.name></v-list-item-title>
+            </v-list-item>
+          </v-list>
+          <v-divider></v-divider>
+        </v-navigation-drawer>
+      </div>
+    </focus-trap>
 
     <!--
     <v-app-bar class="ml-13 pa-0">
@@ -103,6 +102,7 @@ import ClipSnipList from '@/components/ClipSnipList'
 import Shortcuts from '@/components/Shortcuts'
 import Settings from '@/components/Settings'
 import ClipSnipForm from '@/components/ClipSnipForm'
+import Store from 'electron-store';
 
 export default {
   name: 'App',
@@ -129,14 +129,22 @@ export default {
       shortcutDialog: false,
       settingsDialog: false,
       formDialog: false,
-      snipClipId: null
+      snipClipId: null,
+      joplinEnabled: false,
     }
   },
   mounted () {
     this.$root.$on('sendFocusToMenu', () => {
       this.mini = false
-      this.drawerTrap = true
       console.log('menuTrap active')
+
+      /** the hidden menu is not renderd, therefore can't enable the trap 
+       * 
+      */
+      this.$nextTick(function(){
+        console.log('menuTrap active')
+        this.drawerTrap = true
+      })
     }) 
     this.$root.$on('showShortcutDialog', () => {
       this.shortcutDialog = true
@@ -150,6 +158,16 @@ export default {
       this.formDialog = true
       this.snipClipId = id
     }) 
+
+    var settings = new Store()
+    try{
+      console.log('joplinEnabled')
+      this.joplinEnabled = settings.get('joplingEnabled')
+    } catch (error) {
+      console.log('joplin not enabled')
+      console.log(error)
+    }
+
   },
   methods: {
     keyPress (event) {
