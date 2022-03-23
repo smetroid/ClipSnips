@@ -27,7 +27,7 @@ html::-webkit-scrollbar-track {
     overflow-y: auto;
     /*overflow-x: auto;*/
     height: 700px; /* define your custom height */
-    width: 534px;
+    width: 532px;
 }
 
 .scroll_enabled::-webkit-scrollbar {

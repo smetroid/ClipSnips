@@ -1,5 +1,10 @@
 <template>
   <v-app>
+    <v-system-bar app 
+      height="15" 
+      style="background-color: #272727">
+    </v-system-bar>
+
     <focus-trap v-model="drawerTrap">
       <div 
         id="trapDiv" tabindex="-1"
@@ -40,23 +45,8 @@
         </v-navigation-drawer>
       </div>
     </focus-trap>
-
-    <!--
-    <v-app-bar class="ml-13 pa-0">
-        <v-tabs fixed-tabs dark>
-          <v-tab>
-            ClipSnips
-          </v-tab>
-          <v-tab>
-            Clipboard
-          </v-tab>
-          
-        </v-tabs>
-    </v-app-bar>
-    -->
-
     <!-- Sizes your content based upon application components -->
-    <v-main class="ml-13 pa-0">
+    <v-main>
       <v-card>
         <v-dialog 
           scrollable

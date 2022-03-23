@@ -14,8 +14,10 @@
             item-key="id" 
             :search="search"
             :items-per-page="itemsPerPage" 
+            class="elevation-5" 
             :page.sync="page"
-            width="400px"
+            width="100%"
+            height="100%"
             >
             <v-pagination
               v-model="page"
@@ -37,13 +39,10 @@
             <template slot="{ item }" slot-scope="props">
             -->
               <tr
-                class="rows"
                 item=item 
                 >
                 <div 
-                  class="rows"
-                  :class="selectedRowId == item.id?'rowSelected blue-grey':''">
-                </div>
+                  :class="selectedRowId == item.id?'rowSelected orange':''">
                 <!--
                   displays items sent directly by the query, not in the order expected
                 <td v-for="key in Object.keys(item)" :key="key">{{ item[key] }}</td>
@@ -87,7 +86,7 @@
                           justify="space-between" 
                           dense
                           >
-                          <v-col cols="4">
+                          <v-col cols="5">
                             <span 
                               class="blue--text text--lighten--1" 
                               v-html="item.date"></span>
@@ -141,10 +140,10 @@
                           style="width: 800px; height:800px">
                         </v-img>
                       </v-dialog>
-                      <div 
+                      <div style="width: 530px"
                         v-if="!readMore[item.id]">
                         <v-img v-bind:src="`${item.clip.thumbBuffer}`" 
-                        style="width: 200px; height:200px">
+                        style="width: 100px; height:100px">
                         </v-img>
                       </div>
                       <v-container fluid class="ma-0 pt-1">
@@ -152,7 +151,7 @@
                           justify="space-between" 
                           dense
                           >
-                          <v-col cols="4">
+                          <v-col cols="5">
                             <span 
                               class="blue--text text--lighten--1" 
                               v-html="item.date"></span>
@@ -203,6 +202,7 @@
                       </v-container>
                     </div>
                   </td>
+                </div>
               </tr>
             </template>
             <template v-slot:no-data>
@@ -545,13 +545,14 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 .rowSelected {
-  display: table-cell;
-  /*
-  border-radius: 10px;
-  box-shadow: 0 0 10px #9ecaed;
-  background: orange;
-  */
-  width: 5px
+  box-shadow: #fff;
+  display: inline-block;
+  padding: 1px;
+  margin: 0;
+  outline: 0;
+  background-color: #fff;
+  border: 1px solid #ccc;
+  border-radius: 3px;
 }
 </style>
 <style lang="scss">  
