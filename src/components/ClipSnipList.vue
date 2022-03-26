@@ -41,9 +41,9 @@
               <tr
                 item=item 
                 >
+                <!--
                 <div 
                   :class="selectedRowId == item.id?'rowSelected orange':''">
-                <!--
                   displays items sent directly by the query, not in the order expected
                 <td v-for="key in Object.keys(item)" :key="key">{{ item[key] }}</td>
                 -->
@@ -51,7 +51,9 @@
                   <td v-for="key in Object.keys(props.item)" :key="key">{{props.item[key]}}</td>
                 <td>{{ item.id }}</td>
                 -->
-                  <td class="ma-0 pa-0 rows">
+                <td class="ma-0 pa-1 newbg">
+                  <div style="width: 100%"
+                    :class="selectedRowId == item.id?'rowSelected':''">
                     <div style="background-color: #282C34"
                       v-if="`${item.clip.type}` === 'text'">
                       <v-dialog 
@@ -64,17 +66,17 @@
                         </div>
                       </v-dialog>
                       <div 
-                        class="rows"
+                        class="newbg"
                         v-if="!readMore[item.id]">
                         <div
-                          class="scroll_enabled ma-0 pa-1 rows"> 
+                          class="scroll_enabled ma-0 pa-1 newbg"> 
                           <div 
-                            class="rows"
+                            class="newbg"
                             v-if="`${item.clip.html}` === ''"> 
                             {{ item.clip.text }}
                           </div>
                           <div else 
-                            class="rows"
+                            class="newbg"
                           >
                             <span v-html="item.clip.html" />
                           </div>
@@ -121,14 +123,14 @@
                               x-small
                               outlined
                               @click="imageDialog = false" 
-                              >Show less (m)
+                              >less (m)
                             </v-btn>
                             <v-btn 
                               v-if="!readMore[item.id]"
                               outlined
                               x-small
                               @click="imageDialog = true" 
-                              >Show more (m)
+                              >more (m)
                             </v-btn>
                           </v-col>
                         </v-row>
@@ -136,14 +138,18 @@
                     </div>
                     <div v-if="`${item.clip.type}` === 'image'">
                       <v-dialog v-model='imageDialog'>
-                        <v-img v-bind:src="`${item.clip.buffer}`" 
-                          style="width: 800px; height:800px">
-                        </v-img>
+                          <v-img v-bind:src="`${item.clip.buffer}`">
+                          </v-img>
                       </v-dialog>
-                      <div style="width: 530px"
+                      <div class="snip"
+                        style="
+                        "
                         v-if="!readMore[item.id]">
-                        <v-img v-bind:src="`${item.clip.thumbBuffer}`" 
-                        style="width: 100px; height:100px">
+                        <v-img 
+                          min-height="800px"
+                          min-width="800px"
+                          v-bind:src="`${item.clip.buffer}`" 
+                        >
                         </v-img>
                       </div>
                       <v-container fluid class="ma-0 pt-1">
@@ -188,21 +194,21 @@
                               x-small
                               outlined
                               @click="imageDialog = false" 
-                              >Show less (m)
+                              >less (m)
                             </v-btn>
                             <v-btn 
                               v-if="!readMore[item.id]"
                               outlined
                               x-small
                               @click="imageDialog = true" 
-                              >Show more (m)
+                              >more (m)
                             </v-btn>
                           </v-col>
                         </v-row>
                       </v-container>
                     </div>
-                  </td>
-                </div>
+                  </div>
+                </td>
               </tr>
             </template>
             <template v-slot:no-data>
@@ -225,6 +231,7 @@ import { DBApi } from '@/core/Api.js'
 const db = new DBApi()
 import {EVENT} from '@/core/cmdrConstants'
 import goTo from 'vuetify/lib/services/goto'
+import {clipboard} from 'electron'
 // import * as easings from 'vuetify/lib/services/goto/easing-patterns'
 export default {
   name: 'ClipSnipList',
@@ -481,6 +488,17 @@ export default {
       if (event.key === 'c') {
         this.$root.$emit('showClipformDialog')
       }
+
+      // Create new ClipSnippet out of the clip data
+      if (event.key === 'y') {
+        console.log(this.selectedRow.clip.text)
+        console.log(this.selectedRowId)
+        // console.log(clipboard)
+        clipboard.writeText(this.selectedRow.clip.text);
+
+        //this.onClose();
+        //this.$root.$emit('showClipformDialog')
+      }
     },
     save (){
     },
@@ -545,14 +563,13 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 .rowSelected {
-  box-shadow: #fff;
+  box-shadow: 0px 0px 0px 0px orange, 0px 0px 10px 0px orange;
   display: inline-block;
-  padding: 1px;
+  padding: 0px;
   margin: 0;
   outline: 0;
-  background-color: #fff;
-  border: 1px solid #ccc;
-  border-radius: 3px;
+  border: 1px solid orange;
+  border-radius: 0px;
 }
 </style>
 <style lang="scss">  

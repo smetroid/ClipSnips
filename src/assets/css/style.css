@@ -27,11 +27,12 @@ html::-webkit-scrollbar-track {
     overflow-y: auto;
     /*overflow-x: auto;*/
     height: 700px; /* define your custom height */
-    width: 532px;
+    width: 525px;
 }
 
 .scroll_enabled::-webkit-scrollbar {
-    width: 10px;
+    width: 7px;
+    height: 7px;
 }
 .scroll_enabled::-webkit-scrollbar-corner {
     background: rgba(0,0,0,0);
@@ -48,11 +49,41 @@ html::-webkit-scrollbar-track {
     background-color: rgb(58, 57, 57);
 }
 
-.rows {
+.newbg {
     background-color: #282C34 !important;
     height: 100px;
 }
 .more {
     background-color: #282C34 !important;
     height: 700px;
+}
+
+.snip{
+    overflow: auto;
+    /*overflow-x: auto;*/
+    height: 100px; /* define your custom height */
+    width: 525px;
+    white-space: nowrap;
+}
+
+.snip::-webkit-scrollbar {
+    width: 7px;
+    height: 7px;
+}
+
+.snip::-webkit-scrollbar-corner {
+    background: rgba(0,0,0,0);
+}
+
+.snip::-webkit-scrollbar-thumb {
+    background-color: #e6e6e6b2;
+    border-radius: 1px;
+    border: 1px solid rgba(0,0,0,0);
+    background-clip: content-box;
+    min-width: 10px;
+    min-height: 22px;
+}
+
+.snip::-webkit-scrollbar-track {
+    background-color: rgb(58, 57, 57);
 }

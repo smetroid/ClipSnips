@@ -32,7 +32,7 @@
               ref="nav"
               v-for="(link, i) in menuLinks"
               :key="i"
-              :class="currentMenuLink == link.name?'blue-grey':''"
+              :class="currentMenuLink == link.name?'orange':''"
               @click="navigate(link.name)"
             >
               <v-list-item-icon>
