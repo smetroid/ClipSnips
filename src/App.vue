@@ -66,8 +66,12 @@
           </v-card>
         </v-dialog>
       </v-card>
-      <v-card>
+      <v-card v-if="clipSnips">
         <ClipSnipList />
+      </v-card>
+      <v-card v-else >
+        <JoplinSnipList 
+        />
       </v-card>
       <v-card>
         <v-dialog style="overflow-y: hidden"
@@ -91,7 +95,7 @@ import Utils from '@/helpers/Utils'
 import ClipSnipList from '@/components/ClipSnipList'
 import Shortcuts from '@/components/Shortcuts'
 import Settings from '@/components/Settings'
-import ClipSnipForm from '@/components/ClipSnipForm'
+import JoplinSnipList from '@/components/JoplinSnipList'
 import Store from 'electron-store';
 
 export default {
@@ -100,7 +104,7 @@ export default {
     ClipSnipList,
     Shortcuts,
     Settings,
-    ClipSnipForm
+    JoplinSnipList
   },
   data () {
     return {
@@ -121,6 +125,7 @@ export default {
       formDialog: false,
       snipClipId: null,
       joplinEnabled: false,
+      clipSnips: false
     }
   },
   mounted () {

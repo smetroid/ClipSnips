@@ -3,26 +3,24 @@
       @keydown.alt="keyPress($event)"
       @keypress.stop.prevent="keyPress($event)"
     >
-      <focus-trap v-model="listTrap" ref="trap" style="outline: none;">
+      <focus-trap v-model="joplinListTrap" ref="trap" style="outline: none;">
         <div class="ma-1 pa-0"
-          id="trapDiv" 
-          tabindex="-1"
-          >
+          id="trapDiv" tabindex="-1">
           <v-data-table dense ref="list" 
             :headers="headers"
-            :items="history" 
+            :items="snippets.items" 
             item-key="id" 
             :search="search"
             :items-per-page="itemsPerPage" 
             class="elevation-5" 
             :page.sync="page"
-            width="100%"
-            height="100%"
+            width="400px"
             >
             <v-pagination
               v-model="page"
               :length="totalPages">
             </v-pagination>
+
             <template v-slot:top>
               <v-text-field 
                 class-x-4
@@ -32,55 +30,31 @@
                 v-model="search" 
                 label="Search String (/)" 
                 append-icon="mdi-magnify"
-                />
+              />
             </template>
+
             <template v-slot:item="{ item }">
-            <!--
-            <template slot="{ item }" slot-scope="props">
-            -->
-              <tr
-                item=item 
-                >
-                <!--
+              <tr>
                 <div 
-                  :class="selectedRowId == item.id?'rowSelected orange':''">
-                  displays items sent directly by the query, not in the order expected
-                <td v-for="key in Object.keys(item)" :key="key">{{ item[key] }}</td>
-                -->
-                <!--
-                  <td v-for="key in Object.keys(props.item)" :key="key">{{props.item[key]}}</td>
-                <td>{{ item.id }}</td>
-                -->
-                <td class="ma-0 pa-1 newbg">
-                  <div style="width: 100%"
-                    :class="selectedRowId == item.id?'rowSelected':''">
-                    <div style="background-color: #282C34"
-                      v-if="`${item.clip.type}` === 'text'">
+                  :class="selectedRowId == item.id?'rowSelected blue-grey':''">
+                </div>
+                  <td class="ma-0 pa-1">
+                    <div>
                       <v-dialog 
                         v-model="readMore[item.id]"
                         >
-                        <div
-                          class="scroll_enabled ma-0 pa-0 more">
-                          <span v-html="item.clip.html">
+                        <v-card 
+                          class="scroll_enabled ma-0 pa-1"> 
+                          <span v-html="toHtml(item.body)">
                           </span>
-                        </div>
+                        </v-card>
                       </v-dialog>
-                      <div 
-                        class="newbg"
-                        v-if="!readMore[item.id]">
-                        <div
-                          class="scroll_enabled ma-0 pa-1 newbg"> 
-                          <div 
-                            class="newbg"
-                            v-if="`${item.clip.html}` === ''"> 
-                            {{ item.clip.text }}
-                          </div>
-                          <div else 
-                            class="newbg"
-                          >
-                            <span v-html="item.clip.html" />
-                          </div>
-                        </div>
+                      <div v-if="!readMore[item.id]">
+                        <v-card
+                          max-height="100px"
+                          class="scroll_enabled ma-0 pa-1"> 
+                            <span v-html="toHtml(item.body)" />
+                        </v-card>
                       </div>
                       <v-container fluid class="ma-0 pt-2">
                         <v-row
@@ -88,10 +62,10 @@
                           justify="space-between" 
                           dense
                           >
-                          <v-col cols="5">
+                          <v-col cols="4">
                             <span 
                               class="blue--text text--lighten--1" 
-                              v-html="item.date"></span>
+                              v-html="date(item.updated_time)"></span>
                           </v-col>
                           <v-col>
                             <span 
@@ -123,92 +97,20 @@
                               x-small
                               outlined
                               @click="imageDialog = false" 
-                              >less (m)
+                              >Show less (m)
                             </v-btn>
                             <v-btn 
                               v-if="!readMore[item.id]"
                               outlined
                               x-small
                               @click="imageDialog = true" 
-                              >more (m)
+                              >Show more (m)
                             </v-btn>
                           </v-col>
                         </v-row>
                       </v-container>
                     </div>
-                    <div v-if="`${item.clip.type}` === 'image'">
-                      <v-dialog v-model='imageDialog'>
-                          <v-img v-bind:src="`${item.clip.buffer}`">
-                          </v-img>
-                      </v-dialog>
-                      <div class="snip"
-                        style="
-                        "
-                        v-if="!readMore[item.id]">
-                        <v-img 
-                          min-height="800px"
-                          min-width="800px"
-                          v-bind:src="`${item.clip.buffer}`" 
-                        >
-                        </v-img>
-                      </div>
-                      <v-container fluid class="ma-0 pt-1">
-                        <v-row 
-                          justify="space-between" 
-                          dense
-                          >
-                          <v-col cols="5">
-                            <span 
-                              class="blue--text text--lighten--1" 
-                              v-html="item.date"></span>
-                          </v-col>
-                          <v-col>
-                            <span 
-                            class="orange--text"> Tags </span>  
-                          </v-col>
-                          <v-col>
-                            <v-icon 
-                              color="yellow">mdi-star-outline
-                            </v-icon>
-                          </v-col>
-                          <v-col>
-                            <v-icon
-                              small
-                              class="mr-2"
-                              color="green"
-                              @click="editItem(item)"
-                            >mdi-pencil
-                            </v-icon>
-                          </v-col>
-                          <v-col>
-                            <v-icon
-                              small
-                              color="red"
-                              @click="deleteItem(item)"
-                            >mdi-delete
-                            </v-icon>
-                          </v-col>
-                          <v-col>
-                            <v-btn 
-                              v-if="readMore[item.id]" 
-                              x-small
-                              outlined
-                              @click="imageDialog = false" 
-                              >less (m)
-                            </v-btn>
-                            <v-btn 
-                              v-if="!readMore[item.id]"
-                              outlined
-                              x-small
-                              @click="imageDialog = true" 
-                              >more (m)
-                            </v-btn>
-                          </v-col>
-                        </v-row>
-                      </v-container>
-                    </div>
-                  </div>
-                </td>
+                  </td>
               </tr>
             </template>
             <template v-slot:no-data>
@@ -224,24 +126,25 @@
 <script>
 // const { ipcRenderer } = require('electron')
 // const { clipboard } = require('electron')
-import { ClipboardWatcher } from '@/core/clipboard-watcher'
 import Utils from '@/helpers/Utils'
-let rendererChannel = null
 import { DBApi } from '@/core/Api.js'
 const db = new DBApi()
-import {EVENT} from '@/core/cmdrConstants'
 import goTo from 'vuetify/lib/services/goto'
-import {clipboard} from 'electron'
+import JoplinApi from '@/core/JoplinApi'
+import { marked } from 'marked';
+// import { MarkupToHtml } from 'joplin-renderer'
+import { forEach } from 'lodash'
+
 // import * as easings from 'vuetify/lib/services/goto/easing-patterns'
 export default {
-  name: 'ClipSnipList',
+  name: 'JoplinSnipList',
   // NOTE: props need an array[] prop is a single string -EC-
   // props: ['active', 'test'],
   data () {
     return {
       imageDialog: false,
       readMore: {},
-      listTrap: false,
+      joplinListTrap: false,
       diagramListModal: true,
       focusedIndex: null,
       selectedRow: null,
@@ -249,66 +152,16 @@ export default {
       search: '',
       smallDialog: false,
       editedIndex: -1,
-      editedItem: {
-        name: '',
-        description: '',
-        diagram: '',
-      },
+      // the value of 'body' is what is field that is being searched
       headers: [
-        // {text: 'Id', value: 'id', sortable: false},
-        {text: 'SnipClip', value: 'clip.html', sortable: true, align: ' d-none'},
-        // {text: 'Description', value: 'description'},
-        // {text: 'Created', value: 'created'},
-        // {text: 'Updated', value: 'updated'},
+        {text: 'Snippets', value: 'body', sortable: false, align: ' d-none'},
       ],
-      //clips: [
-      //          {
-      //            id: 'one',
-      //            name:'one',
-      //            description:'one',
-      //            createTime:'one',
-      //            updatedTime:'one'
-      //          },
-      //          {
-      //            id:'two',
-      //            name:'two',
-      //            description:'two',
-      //            createTime:'two',
-      //            updatedTime:'two'
-      //          },
-      //          {
-      //            id:'three',
-      //            name:'three',
-      //            description:'three',
-      //            createTime:'three',
-      //            updatedTime:'three'
-      //          },
-      //          {
-      //            id: 'one',
-      //            name:'<div> one <br/> two <br/> three <br /></div> <div> one <br/> two <br/> three <br /></div>',
-      //            createTime:'one',
-      //            updatedTime:'one'
-      //          },
-      //          {
-      //            id:'two',
-      //            name:'two',
-      //            description:'two',
-      //            createTime:'two',
-      //            updatedTime:'two'
-      //          },
-      //          {
-      //            id:'three',
-      //            name:'three',
-      //            description:'three',
-      //            createTime:'three',
-      //            updatedTime:'three'
-      //          },
-      //        ],
-      history: [],
+      snippets: [],
       page: 1,
       itemsPerPage: 5,
       goToVar: 100,
-      hideClipSnip: true
+      hideClipSnip: true,
+      tags: true
     }
   },
   computed: {
@@ -316,47 +169,69 @@ export default {
       return this.editedIndex === -1 ? 'New Item' : 'Edited Item'
     },
     totalPages () {
-      var pages = Math.ceil(this.history.length / this.itemsPerPage)
+      var pages = Math.ceil(this.snippets.length / this.itemsPerPage)
       return pages
     },
     itemDiff () {
-      var items = (this.page * this.itemsPerPage) - this.history.length
+      var items = (this.page * this.itemsPerPage) - this.snippets.length
       return items
     },
   },
   updated() {
     console.log('updated')
   },
-  mounted () {
-    const clipboardWatcher = new ClipboardWatcher()
-    // clipboardWatcher.on('item', item => {
-    //   rendererChannel.send(EVENT.ITEM_NEW, item);
-    // });
-    console.log(EVENT)
-    console.log(rendererChannel)
-
-    clipboardWatcher.startListening(this);
-
-    // setInterval(this.scrapeClipboard, 2000)
-
-    this.history = db.getAllCommands()
-    this.diagramListModal = this.active == 'Open' ? 1 : 0
-    this.$root.$on('addItem', (entry) => {
-      console.log('adding item on vue')
-      this.newItem(entry)
-    })
+  mounted: async function()  {
+    this.snippets = await JoplinApi.getAllSnippetNotes()
+    console.log((this.snippets))
 
     this.$root.$on('sendFocusToDataTable', () => {
       console.log('datatableFOcus')
-      this.listTrap = true
+      this.joplinlistTrap = true
     })
 
     this.$nextTick(function(){
       console.log('menuTrap active')
-      this.listTrap = true
+      this.joplinListTrap = true
     })
   },
   methods: {
+    date (item) {
+      var date = new Date(item)
+      date = date.toISOString().split('T')[0]
+      return date
+    },
+    toHtml (item) {
+      // Working on getting the joplin rederer to work 
+      //const options = {}
+      //const theme = {}
+      //const markupToHTML = new MarkupToHtml(options)
+      //var result = await markupToHTML.render(MarkupToHtml.MARKUP_LANGUAGE_MARKDOWN, item, theme, options)
+      //console.log(result)
+      //return result.html
+      var parsed = marked.parse(item)
+      return parsed
+    },
+    async getAllTags () {
+      var tagData = []
+      tagData = await JoplinApi.getAllTags()
+      forEach((tag) => {
+        tagData.push(tag.title)
+      })
+      this.tags = tagData
+    },
+    getSnippet (snippet_body) {
+      var data = {}
+      const body = marked.lexer(snippet_body)
+      var codeBlocks = body.filter(obj => obj.type === 'code')
+
+      // The first block is always the snippet code
+      var snippet = codeBlocks[0]
+      data.snippet = snippet
+      // The options are always the second block
+      var snipOptions = codeBlocks[1]
+      data.options = snipOptions
+      return data
+    },
     showMore(id) {
       this.$set(this.readMore, id, true);
     },
@@ -365,10 +240,10 @@ export default {
     },
     newItem (entry) {
       db.addNewCommandItem(entry)
-      this.history = db.getAllCommands()
+      this.snippets = db.getAllCommands()
     },
     getAllItems () {
-      this.history = db.getAllCommands()
+      this.snippets = db.getAllCommands()
     },
     keyPress(event){
       //console.log(event)
@@ -449,19 +324,10 @@ export default {
         this.listTrap = false
         this.$root.$emit('sendFocusToMenu')
       } else if (event.key === 'm') {
-        console.log(this.selectedRow.clip.type)
-        if (this.selectedRow.clip.type === 'image') {
-          if(this.readMore[this.selectedRowId]){
-            this.imageDialog = false
-          } else {
-            this.imageDialog = true
-          }
+        if(this.readMore[this.selectedRowId]){
+          this.showLess(this.selectedRowId)
         } else {
-          if(this.readMore[this.selectedRowId]){
-            this.showLess(this.selectedRowId)
-          } else {
-            this.showMore(this.selectedRowId)
-          }
+          this.showMore(this.selectedRowId)
         }
       }
 
@@ -490,13 +356,11 @@ export default {
       }
 
       if (event.key === 'y') {
+        console.log(this.selectedRow.body)
+        var data = this.getSnippet(this.selectedRow.body)
+        console.log(data)
         console.log(this.selectedRow.clip.text)
         console.log(this.selectedRowId)
-        // console.log(clipboard)
-        clipboard.writeText(this.selectedRow.clip.text);
-
-        //this.onClose();
-        //this.$root.$emit('showClipformDialog')
       }
     },
     save (){
@@ -514,12 +378,7 @@ export default {
         console.log(item)
       }
       db.deleteCommandById(item.id)
-      this.history = db.getAllCommands()
-    },
-    getDiagrams: async function() {
-      // var result = await D3VimApi.getDiagrams()
-      // console.log(result)
-      // this.clips = result.data.dags
+      this.snippets = db.getAllCommands()
     },
     close () {
       console.log('Close method')
@@ -562,13 +421,13 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 .rowSelected {
-  box-shadow: 0px 0px 0px 0px orange, 0px 0px 10px 0px orange;
-  display: inline-block;
-  padding: 0px;
-  margin: 0;
-  outline: 0;
-  border: 1px solid orange;
-  border-radius: 0px;
+  display: table-cell;
+  /*
+  border-radius: 10px;
+  box-shadow: 0 0 10px #9ecaed;
+  background: orange;
+  */
+  width: 5px
 }
 </style>
 <style lang="scss">  
