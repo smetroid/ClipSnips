@@ -164,11 +164,26 @@ export default {
       tags: true
     }
   },
+  mounted: async function()  {
+    this.snippets = await JoplinApi.getAllSnippetNotes()
+    console.log((this.snippets.length))
+
+    this.$nextTick(function(){
+      console.log('menuTrap active')
+      this.joplinListTrap = true
+    })
+
+    this.$root.$on('sendFocusToDataTable', () => {
+      console.log('datatableFocus')
+      this.joplinlistTrap = true
+    })
+  },
   computed: {
     formTitle () {
       return this.editedIndex === -1 ? 'New Item' : 'Edited Item'
     },
     totalPages () {
+      console.log(this.snippets.length)
       var pages = Math.ceil(this.snippets.length / this.itemsPerPage)
       return pages
     },
@@ -179,20 +194,6 @@ export default {
   },
   updated() {
     console.log('updated')
-  },
-  mounted: async function()  {
-    this.snippets = await JoplinApi.getAllSnippetNotes()
-    console.log((this.snippets))
-
-    this.$root.$on('sendFocusToDataTable', () => {
-      console.log('datatableFOcus')
-      this.joplinlistTrap = true
-    })
-
-    this.$nextTick(function(){
-      console.log('menuTrap active')
-      this.joplinListTrap = true
-    })
   },
   methods: {
     date (item) {
@@ -305,6 +306,8 @@ export default {
       }
 
       if (event.key === 'l' || event.key === 'h') {
+        console.log(this.page)
+        console.log(this.totalPages)
         this.page = Utils.getPage(this.page, event.key, this.totalPages)
       }
 
@@ -320,10 +323,7 @@ export default {
         this.deleteItem(this.selectedRow)
       }
 
-      if (event.altKey === true && event.key === 'm') {
-        this.listTrap = false
-        this.$root.$emit('sendFocusToMenu')
-      } else if (event.key === 'm') {
+      if (event.key === 'm') {
         if(this.readMore[this.selectedRowId]){
           this.showLess(this.selectedRowId)
         } else {
@@ -346,7 +346,10 @@ export default {
       }
 
       // Create new ClipSnippet
-      if (event.key === 'n') {
+      if (event.altKey === true && event.key === 'n') {
+        this.listTrap = false
+        this.$root.$emit('sendFocusToMenu')
+      } else if (event.key === 'n') {
         this.$root.$emit('showClipformDialog')
       }
 

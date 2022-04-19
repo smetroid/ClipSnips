@@ -303,7 +303,7 @@ export default {
         break
     }
     id = this.mod(id, pages + 1)
-    if (id == 0) {
+    if (id === 0) {
       id = 1
     }
     return id

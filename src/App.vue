@@ -175,7 +175,7 @@ export default {
         this.currentMenuLink = this.menuLinks[this.focusedIndex].name
       }
 
-      if ((event.altKey === true && event.key === 'm') ||
+      if ((event.altKey === true && event.key === 'n') ||
           (event.key === 'Escape')) {
             console.log('esc')
         this.esc()
