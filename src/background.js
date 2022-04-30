@@ -53,7 +53,20 @@ async function createWindow() {
     // Load the index.html when not in development
     win.loadURL('app://./index.html')
   }
+  return win
 }
+
+// async function preventMeta(win) {
+//   console.log(win)
+//   win.webContents.on('before-input-event', (event, input) => {
+//     if (input.meta && input.key.toLowerCase() === 'i') {
+//       console.log('Pressed Control+I')
+//       //event.stopPropagation
+//       //event.stopImmediatePropagation
+//       event.preventDefault
+//     }
+//   });
+// }
 
 // Quit when all windows are closed.
 app.on('window-all-closed', () => {
@@ -82,7 +95,8 @@ app.on('ready', async () => {
       console.error('Vue Devtools failed to install:', e.toString())
     }
   }
-  createWindow()
+  var win = await createWindow()
+  // preventMeta(win)
 })
 
 // Exit cleanly on request from parent process in development mode.

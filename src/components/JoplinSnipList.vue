@@ -1,6 +1,7 @@
 <template>
     <div
-      @keydown.alt="keyPress($event)"
+      @keydown.ctrl="keyPress($event)"
+      @keyup.meta.stop.self="keyPress($event)"
       @keypress.stop.prevent="keyPress($event)"
     >
       <focus-trap v-model="joplinListTrap" ref="trap" style="outline: none;">
@@ -247,7 +248,8 @@ export default {
       this.snippets = db.getAllCommands()
     },
     keyPress(event){
-      //console.log(event)
+      event.preventDefault()
+      console.log(event)
       /*
       1. get list of tr's
 
@@ -341,12 +343,12 @@ export default {
         this.$root.$emit('showShortcutDialog')
       }
 
-      if (event.altKey === true && event.key === 's') {
+      if (event.ctrlKey === true && event.key === 's') {
         this.$root.$emit('showSettingsDialog')
       }
 
       // Create new ClipSnippet
-      if (event.altKey === true && event.key === 'n') {
+      if (event.ctrlKey === true && event.key === 'n') {
         this.listTrap = false
         this.$root.$emit('sendFocusToMenu')
       } else if (event.key === 'n') {
